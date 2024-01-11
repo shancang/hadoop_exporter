@@ -31,10 +31,7 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 				"deleteTime_num_ops",
 				"incrementTime_num_ops",
 				"putBatchTime_num_ops",
-				"deleteBatchTime_num_ops",
-				"scanTime_98th_percentile",
-				"scanTime_99th_percentile",
-				"scanTime_99.9th_percentile":
+				"deleteBatchTime_num_ops":
 				metricsName, describeName := common.ConversionToPrometheusFormat(metrics)
 				ch <- prometheus.MustNewConstMetric(
 					prometheus.NewDesc(
@@ -52,15 +49,17 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 					zap.String("metrics", metrics))
 			}
 		}
-		if strings.Contains(key, "scanTime") {
+		if strings.Contains(key, "scanTime_99th") ||
+			strings.Contains(key, "scanTime_98th") ||
+			strings.Contains(key, "scanTime_95th") ||
+			strings.Contains(key, "scanTime_90th") ||
+			strings.Contains(key, "scanTime_max") {
 			match := re.FindStringSubmatch(key)
 			if len(match) != 4 {
 				log.Debug("parseHbaseRegionServerTableLatencies incomplete indicator collection",
 					zap.String("key", key))
 				continue
 			}
-			key = strings.Replace(key, "-", "_", -1)
-			key = strings.Replace(key, ".", "", -1)
 			nameSpace, tableName, metrics := match[1], match[2], match[3]
 			metricsName, describeName := common.ConversionToPrometheusFormat(metrics)
 			ch <- prometheus.MustNewConstMetric(

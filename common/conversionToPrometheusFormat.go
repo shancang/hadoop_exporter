@@ -7,6 +7,8 @@ import (
 
 func ConversionToPrometheusFormat(original string) (string, string) {
 	var words []string
+	original = strings.Replace(original, "-", "_", -1)
+	original = strings.Replace(original, ".", "_", -1)
 	l := 0
 	for s := original; s != ""; s = s[l:] {
 		l = strings.IndexFunc(s[1:], unicode.IsUpper) + 1
