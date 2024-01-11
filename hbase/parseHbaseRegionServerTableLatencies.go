@@ -32,7 +32,6 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 				"incrementTime_num_ops",
 				"putBatchTime_num_ops",
 				"deleteBatchTime_num_ops",
-				"scanTime_95th_percentile",
 				"scanTime_98th_percentile",
 				"scanTime_99th_percentile",
 				"scanTime_99.9th_percentile":
@@ -52,6 +51,27 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 				log.Debug("parseHbaseRegionServerTableLatencies incomplete indicator collection",
 					zap.String("metrics", metrics))
 			}
+		}
+		if strings.Contains(key, "scanTime") {
+			match := re.FindStringSubmatch(key)
+			if len(match) != 4 {
+				log.Debug("parseHbaseRegionServerTableLatencies incomplete indicator collection",
+					zap.String("key", key))
+				continue
+			}
+			nameSpace, tableName, metrics := match[1], match[2], match[3]
+			metricsName, describeName := common.ConversionToPrometheusFormat(metrics)
+			ch <- prometheus.MustNewConstMetric(
+				prometheus.NewDesc(
+					prometheus.BuildFQName(c.Namespace, "regionserver_table_latencies", metricsName),
+					strings.Join([]string{c.Namespace, "regionserver table latencies", describeName}, " "),
+					[]string{"role", "host", "namespace", "table"},
+					nil,
+				),
+				prometheus.GaugeValue,
+				value.(float64),
+				c.Role, c.Hostname, nameSpace, tableName,
+			)
 		}
 	}
 }
