@@ -59,6 +59,8 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 					zap.String("key", key))
 				continue
 			}
+			key = strings.Replace(key, "-", "_", -1)
+			key = strings.Replace(key, ".", "", -1)
 			nameSpace, tableName, metrics := match[1], match[2], match[3]
 			metricsName, describeName := common.ConversionToPrometheusFormat(metrics)
 			ch <- prometheus.MustNewConstMetric(
