@@ -49,11 +49,11 @@ func (c *Collect) parseHbaseRegionServerTableLatencies(ch chan<- prometheus.Metr
 					zap.String("metrics", metrics))
 			}
 		}
-		if strings.Contains(key, "scanTime_99th") ||
-			strings.Contains(key, "scanTime_98th") ||
-			strings.Contains(key, "scanTime_95th") ||
-			strings.Contains(key, "scanTime_90th") ||
-			strings.Contains(key, "scanTime_max") {
+		if strings.Contains(key, "Time_99th") ||
+			strings.Contains(key, "Time_98th") ||
+			strings.Contains(key, "Time_95th") ||
+			strings.Contains(key, "Time_90th") ||
+			strings.Contains(key, "Time_max") {
 			match := re.FindStringSubmatch(key)
 			if len(match) != 4 {
 				log.Debug("parseHbaseRegionServerTableLatencies incomplete indicator collection",
