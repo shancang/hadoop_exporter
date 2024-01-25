@@ -17,7 +17,7 @@ func (c *CollectGenericMetricsForPrometheus) ParseJvmMetrics(ch chan<- prometheu
 		case
 			"MemNonHeapUsedM", "MemNonHeapCommittedM", "MemNonHeapMaxM",
 			"MemHeapUsedM", "MemHeapCommittedM", "MemHeapMaxM", "MemMaxM",
-			"GcCount", "GcTimeMillis",
+			"GcCount", "GcTimeMillis", "GcCountParNew", "GcTimeMillisParNew", "GcCountConcurrentMarkSweep", "GcTimeMillisConcurrentMarkSweep",
 			"GcNumWarnThresholdExceeded", "GcNumInfoThresholdExceeded", "GcTotalExtraSleepTime",
 			"ThreadsNew", "ThreadsRunnable", "ThreadsBlocked", "ThreadsWaiting", "ThreadsTimedWaiting", "ThreadsTerminated",
 			"LogFatal", "LogError", "LogWarn", "LogInfo":
